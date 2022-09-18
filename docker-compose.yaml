@@ -1,0 +1,50 @@
+version: cd
+services:
+  db:
+    container_name: postgres_container
+    image: postgres
+    restart: unless-stopped
+    networks:
+      - default
+      - service-proxy
+    ports:
+      - "${DB_PORT}:5432"
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_HOST=${DB_POSTGRES_HOST}
+    volumes:
+      - 'postgres:/var/lib/postgresql/data2'
+    labels:
+      description: "Postgresql Database"
+      service: "postgresql"
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    restart: unless-stopped
+
+  fastapi:
+    container_name: fastapi_container
+    image: fastapi
+    command: [ "uvicorn", "app.main:app","--host", "0.0.0.0","--reload","--debug" ]
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code
+    networks:
+      - default
+      - service-proxy
+    restart: unless-stopped
+    depends_on:
+      - db
+networks:
+  service-proxy:
+volumes:
+  postgres:
