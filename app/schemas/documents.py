@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from pydantic import BaseModel
 
 
@@ -30,3 +28,4 @@ class Document(DocumentBase):
                 **DocumentBase.Config.schema_extra.get("example"),
             }
         }
+

@@ -1,10 +1,10 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import parse_obj_as
-from typing import List
-from uuid import UUID
 
-from ..schemas.documents import Document
 from ..repositories.documents import DocumentsRepository
+from ..schemas.documents import Document
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
@@ -32,4 +32,3 @@ def get_document(document_number: int, documents: DocumentsRepository = Depends(
         )
 
     return Document.from_orm(db_documents)
-

@@ -7,6 +7,7 @@ class ContentBase(BaseModel):
     amount: int
     price: float
     sum: float
+    number: int
 
     class Config:
         schema_extra = {
@@ -15,20 +16,18 @@ class ContentBase(BaseModel):
                 "amount": 1,
                 "price": 12.1,
                 "sum": 12.1,
+                "number": 12
             }
         }
 
 
 # default schema to return on a response
 class Content(ContentBase):
-    number: int
-
     class Config:
         orm_mode = True  # помогает связать модель со схемой
 
         schema_extra = {
             "example": {
-                **ContentBase.Config.schema_extra.get("example"),
-                "number": 12,
+                **ContentBase.Config.schema_extra.get("example")
             }
         }

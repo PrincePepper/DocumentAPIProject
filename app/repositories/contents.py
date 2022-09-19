@@ -11,9 +11,9 @@ class ContentsRepository:
     def __init__(self, db: Session = Depends(get_db)):
         self.db = db  # произойдет внедрение зависимостей
 
-    def find(self, uuid: int) -> Content:
+    def find(self, uuid: int) -> List[Content]:
         query = self.db.query(Content)
-        return query.filter(Content.id == uuid).first()
+        return query.filter(Content.number == uuid).all()
 
     def all(self, skip: int = 0, max: int = 100) -> List[Content]:
         query = self.db.query(Content)
